@@ -2,17 +2,29 @@ package com.example.petclinic.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity(name = "Vet")
+@Table(name = "vet")
 public class Vet {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     private String name;
+
+    @ElementCollection(targetClass = Speciality.class)
+    @Enumerated(EnumType.ORDINAL)
+    @CollectionTable(name = "specialities")
+    @Column(name = "speciality")
     private List<Speciality> specialities = new ArrayList<>();
 
-    @JsonIgnoreProperties({"pet","vets"})
+    @ManyToMany(mappedBy = "vets")
+    @JsonIgnoreProperties({"vets"})
     private List<Visit> visits = new ArrayList<>();
 
     protected Vet() {
@@ -22,6 +34,10 @@ public class Vet {
     public Vet(String name, List<Speciality> specialities) {
         this.name = name;
         this.specialities = specialities;
+    }
+
+    public static VetBuilder builder() {
+        return new VetBuilder();
     }
 
     public Long getId() {
@@ -83,10 +99,6 @@ public class Vet {
         //sb.append(", specialities=").append(specialities);
         sb.append('}');
         return sb.toString();
-    }
-
-    public static VetBuilder builder() {
-        return new VetBuilder();
     }
 
     public static final class VetBuilder {

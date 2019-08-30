@@ -17,11 +17,11 @@
     </parent>
 
     <modules>
+        <module>petclinic-models</module>
         <module>petclinic-owner</module>
         <module>petclinic-pet</module>
         <module>petclinic-visit</module>
         <module>petclinic-vet</module>
-        <module>petclinic-models</module>
         <module>petclinic-rest-client</module>
     </modules>
 
